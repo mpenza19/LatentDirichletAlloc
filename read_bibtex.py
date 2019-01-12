@@ -12,19 +12,27 @@ def get_bibtex_entries_by_year(year_dir):
 
 def get_bibtex_entries_all():
     bibtex_entries = list()
-    for year_dir in [mydir for mydir in sorted(listdir('./abstracts')) if path.isdir('./abstracts/'+mydir)]:
+    for year_dir in [mydir for mydir in sorted(listdir('./abstracts')) if path.isdir('./abstracts/'+mydir)][0:1]:
         bibtex_entries += get_bibtex_entries_by_year(year_dir)
     
     return bibtex_entries
 
-def print_bibtex(bibtex_entries):
-    for entry in bibtex_entries:
-        print "%s. %s\n" % (entry["title"], entry["abstract"])
+def bibtex_tostring(bibtex_entry):
+    return ("%s. %s" % (bibtex_entry["title"], bibtex_entry["abstract"])).replace("<<ETX>>", "")
+    
+def bibtex_tostring_all():
+    return [bibtex_tostring(entry) for entry in get_bibtex_entries_all()]
         
 
 def main():
-    bibtex_entries = get_bibtex_entries_by_year(sys.argv[1]) if len(sys.argv) > 1 else get_bibtex_entries_all()
-    print_bibtex(bibtex_entries)
+    if len(sys.argv) > 1:
+        bibtex_entries = get_bibtex_entries_by_year(sys.argv[1])
+        for entry in bibtex_entries:
+            print bibtex_tostring(entry), '\n'
+
+    else:
+        for line in bibtex_tostring_all():
+            print line, '\n'
 
 main()
 
