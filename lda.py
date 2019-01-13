@@ -30,10 +30,10 @@ exclude.add(";")
 
 lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
-ntopics = 20
+ntopics = 10
 npasses = 400
-result_dir="results"
-model_dir="model"
+result_dir="results_10"
+model_dir="model_10"
 
 
 # Creating the object for LDA model using gensim library
