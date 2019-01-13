@@ -20,7 +20,7 @@ def get_bibtex_entries_all():
     return bibtex_entries
 
 def bibtex_tostring_single(bibtex_entry):
-    return ("%s. %s" % (bibtex_entry["title"], bibtex_entry["abstract"])).replace("<<ETX>>", "")
+    return ("%s. %s. %s" % (bibtex_entry["title"], '; '.join(bibtex_entry["keywords"].split(';')), bibtex_entry["abstract"])).replace("<<ETX>>", "")
 
 def bibtex_tostring_year(year_dir):
     return [bibtex_tostring_single(entry) for entry in get_bibtex_entries_by_year(year_dir)]
@@ -37,12 +37,3 @@ def main():
     else:
         for line in bibtex_tostring_all():
             print line, '\n'
-
-
-    
-
-
-
-
-    
-

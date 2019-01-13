@@ -5,6 +5,7 @@ import read_bibtex
 import os, shutil
 from nltk.corpus import stopwords 
 from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.stem.porter import PorterStemmer
 import string
 import gensim
 from gensim import corpora
@@ -13,8 +14,9 @@ import multiprocessing as mp
 stop = set(stopwords.words('english'))
 exclude = set(string.punctuation) 
 lemma = WordNetLemmatizer()
+stemmer = PorterStemmer()
 ntopics = 20
-npasses = 50
+npasses = 100
 
 # Creating the object for LDA model using gensim library
 Lda = gensim.models.ldamodel.LdaModel
@@ -22,8 +24,9 @@ Lda = gensim.models.ldamodel.LdaModel
 def clean(doc):
     stop_free = " ".join([i for i in doc.lower().split() if i not in stop])
     punc_free = ''.join(ch for ch in stop_free if ch not in exclude)
-    normalized = " ".join(lemma.lemmatize(word) for word in punc_free.split())
-    return normalized
+    lemmatized = " ".join(lemma.lemmatize(word) for word in punc_free.split())
+    stemmed = " ".join(stemmer.stem(word) for word in lemmatized.split())
+    return stemmed
 
 def train_model(year_dir):
     # Read and clean data
