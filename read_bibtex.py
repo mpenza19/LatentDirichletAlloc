@@ -1,6 +1,5 @@
+import os, sys
 import bibtexparser
-import os
-import sys
 
 def get_years():
     return [mydir for mydir in sorted(os.listdir('./abstracts')) if os.path.isdir('./abstracts/'+mydir)]
