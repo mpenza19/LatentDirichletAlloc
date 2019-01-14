@@ -1,10 +1,10 @@
-0 - congestion control / quality of service
+0 - congestion control and quality of service
 1 - Flow measurements
 2 - Information retrieval
 3 - Optical Networks
 4 - Routing (Packet Classification)
-5 - Unknown
-6 - Data Center Networking (multicasting)/ protocol testing
+5 - TCP and transport protocols
+6 - Data Center Networking (multicasting) / protocol testing
 7 - RFID systems
 8 - Cognitive radio networks
 9 - Cryptography
@@ -20,10 +20,10 @@
 19 - Web Caching
 20 - Virtualization
 21 - Sensor Networks
-22 - Crowdsourcing and some crap (not sure)
+22 - Crowdsourcing
 23 - Packet Scheduling
 24 - Mobile networking
-25 - Unknown 
+25 - Graph planarization and distributed computing 
 26 - Wireless transmission
 27 - Machine Learning (Sensor data)
 28 - Privacy and Security (Sensor Data)
