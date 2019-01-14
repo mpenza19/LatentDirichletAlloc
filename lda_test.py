@@ -33,7 +33,7 @@ lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
 ntopics = 10
 npasses = 400
-result_dir="doc_results_all"
+result_dir="doc_results_test"
 model_dir="model_all"
 year_from=1998
 
@@ -98,6 +98,16 @@ def main2():
     
     # Save results
     np.save("./"+result_dir+"/all", np.array(topic_dist)) 
+
+    dist_array = np.array(topic_dist)
+    transpose_array = [[] for x in range(20)]
+    for itr in range(len(dist_array)):
+        for top, weight in dist_array[itr]:
+            transpose_array[top].append((itr, weight))
+
+    for row in transpose_array:
+        row.sort(key=lambda x: x[1], reverse=True)
+    np.save("./"+result_dir+"/all_transpose", np.array(transpose_array))    
 
 # test_model("2005")
 # main()

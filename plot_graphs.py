@@ -3,17 +3,18 @@
 
 import read_bibtex
 import os, shutil
-import string
-import gensim
-import multiprocessing as mp
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import gensim
+
 # import seaborn
 
 result_dir="doc_results_all"
 model_dir="model_all"
-
+graph_dir="graph_all"
+top_dir="top_all"
+year_from=1998
 
 # Creating the object for LDA model using gensim library
 Lda = gensim.models.ldamodel.LdaModel
@@ -51,7 +52,7 @@ def check_results(year_dir):
     right_of_last_bin = data.max() + float(d)/2
 
     plt.hist(data, np.arange(left_of_first_bin, right_of_last_bin + d, d)) #,normed=True, bins=30
-    plt.show()
+    
     # exit(0)
 
 def main():
@@ -63,8 +64,8 @@ def main():
     p.close()
 
 def main2():
-    # if result_dir in os.listdir("."): shutil.rmtree("./"+result_dir)
-    # os.mkdir("./"+result_dir)
+    # if graph_dir in os.listdir("."): shutil.rmtree("./"+graph_dir)
+    # os.mkdir("./"+graph_dir)
 
     # Loading the LDA model
     ldamodel = Lda.load("./"+model_dir+"/all")
@@ -74,14 +75,35 @@ def main2():
     
     # Load results
     dist_array = np.load("./"+result_dir+"/all.npy")
+    transpose_array = np.load("./"+result_dir+"/all_transpose.npy")
+    # print(transpose_array[0][0:10])
 
+    doc_set = read_bibtex.get_bibtex_entries_from(int(year_from))
+
+    for itr in range(20):
+        with open("./"+top_dir+"/"+str(itr)+".txt", 'w') as f:
+            for ind ,_ in transpose_array[itr][0:10]:
+                f.write(str(doc_set[ind]))
+                f.write("\n")
+
+    # for itr in range(len(dist_array)):
+    #     for top, weight in dist_array[itr]:
+    #         transpose_array[top].append((itr, weight))
+
+    # for row in transpose_array:
+    #     row.sort(key=lambda x: x[1], reverse=True)
+
+    # np.save("./"+result_dir+"/all_transpose", np.array(transpose_array))
+    
     data = np.array([float(len(x)) for x in dist_array])
     d = np.diff(np.unique(data)).min()
     left_of_first_bin = data.min() - float(d)/2
     right_of_last_bin = data.max() + float(d)/2
 
     plt.hist(data, np.arange(left_of_first_bin, right_of_last_bin + d, d)) #,normed=True, bins=30
-    plt.show()
+    plt.xlabel("number of topics")
+    plt.xlabel("number of documents")
+    plt.savefig("./graph_all/topic_number.pdf")
 
 # check_results("2016")
 main2()
