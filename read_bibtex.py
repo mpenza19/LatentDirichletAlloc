@@ -15,14 +15,14 @@ def get_bibtex_entries_by_year(year_dir):
 def get_bibtex_entries_all():
     bibtex_entries = list()
     for year_dir in get_years():
-        bibtex_entries += get_bibtex_entries_by_year(year_dir)
+        bibtex_entries.extend(get_bibtex_entries_by_year(year_dir))
     
     return bibtex_entries
 
 def get_bibtex_entries_from(year_from):
     bibtex_entries = list()
     for year_dir in get_years():
-        if year_from >= int(year_dir):
+        if year_from <= int(year_dir):
             bibtex_entries += get_bibtex_entries_by_year(year_dir)
     
     return bibtex_entries
@@ -35,6 +35,9 @@ def bibtex_tostring_year(year_dir):
     
 def bibtex_tostring_all():
     return [bibtex_tostring_single(entry) for entry in get_bibtex_entries_all()]
+
+def bibtex_tostring_from(year_from):
+    return [bibtex_tostring_single(entry) for entry in get_bibtex_entries_from(year_from)]
         
 def main():
     if len(sys.argv) > 1:

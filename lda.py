@@ -34,7 +34,7 @@ ntopics = 20
 npasses = 400
 result_dir="results_all"
 model_dir="model_all"
-year_from=1998
+year_from=2005
 
 
 # Creating the object for LDA model using gensim library
@@ -45,6 +45,7 @@ def clean(doc):
     lemmatized = " ".join(lemma.lemmatize(word)+" " for word in punc_free.lower().split())
     stemmed = " ".join(stemmer.stem(word) for word in lemmatized.split())
     stop_free = " ".join([i for i in stemmed.split() if i not in stop])
+
     return stop_free
 
 def train_model(year_dir):
@@ -86,7 +87,7 @@ def main2():
     if model_dir in os.listdir("."): shutil.rmtree("./"+model_dir)
     os.mkdir("./"+model_dir)
 
-    doc_set = read_bibtex.get_bibtex_entries_from(year_from)
+    doc_set = read_bibtex.bibtex_tostring_from(year_from)
 
     doc_clean = [clean(doc).split() for doc in doc_set]
 
