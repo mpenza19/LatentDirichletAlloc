@@ -33,8 +33,8 @@ lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
 ntopics = 10
 npasses = 400
-result_dir="doc_results_test"
-model_dir="model_all"
+result_dir="doc_results_penza"
+model_dir="model_all_penza"
 year_from=1998
 
 # Creating the object for LDA model using gensim library
