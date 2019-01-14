@@ -10,11 +10,11 @@ import gensim
 
 # import seaborn
 
-result_dir="doc_results_penza"
-model_dir="model_all_penza"
-graph_dir="graph_penza"
-top_dir="top_penza"
-year_from=1998
+result_dir="doc_results_all_500_30"
+model_dir="model_all_500_30"
+graph_dir="graph_500_30"
+top_dir="top_500_30"
+year_from=1980
 
 # Creating the object for LDA model using gensim library
 Lda = gensim.models.ldamodel.LdaModel
@@ -78,34 +78,32 @@ def main2():
     transpose_array = np.load("./"+result_dir+"/all_transpose.npy")
     print(min([max(row, key=lambda x: x[1]) for row in dist_array], key=lambda x: x[1]))
 
-    # print(transpose_array[0][0:10])
+    doc_set = read_bibtex.get_bibtex_entries_from(int(year_from))
 
-    # doc_set = read_bibtex.get_bibtex_entries_from(int(year_from))
+    for itr in range(30):
+        with open("./"+top_dir+"/"+str(itr)+".txt", 'w') as f:
+            for ind ,_ in transpose_array[itr][0:10]:
+                f.write(str(doc_set[ind]))
+                f.write("\n")
 
-    # for itr in range(20):
-    #     with open("./"+top_dir+"/"+str(itr)+".txt", 'w') as f:
-    #         for ind ,_ in transpose_array[itr][0:10]:
-    #             f.write(str(doc_set[ind]))
-    #             f.write("\n")
+    # for itr in range(len(dist_array)):
+    #     for top, weight in dist_array[itr]:
+    #         transpose_array[top].append((itr, weight))
 
-    # # for itr in range(len(dist_array)):
-    # #     for top, weight in dist_array[itr]:
-    # #         transpose_array[top].append((itr, weight))
+    # for row in transpose_array:
+    #     row.sort(key=lambda x: x[1], reverse=True)
 
-    # # for row in transpose_array:
-    # #     row.sort(key=lambda x: x[1], reverse=True)
-
-    # # np.save("./"+result_dir+"/all_transpose", np.array(transpose_array))
+    # np.save("./"+result_dir+"/all_transpose", np.array(transpose_array))
     
-    # data = np.array([float(len(x)) for x in dist_array])
-    # d = np.diff(np.unique(data)).min()
-    # left_of_first_bin = data.min() - float(d)/2
-    # right_of_last_bin = data.max() + float(d)/2
+    data = np.array([float(len(x)) for x in dist_array])
+    d = np.diff(np.unique(data)).min()
+    left_of_first_bin = data.min() - float(d)/2
+    right_of_last_bin = data.max() + float(d)/2
 
-    # plt.hist(data, np.arange(left_of_first_bin, right_of_last_bin + d, d)) #,normed=True, bins=30
-    # plt.xlabel("number of topics")
-    # plt.xlabel("number of documents")
-    # plt.savefig("./"+graph_dir+"/topic_number.pdf")
+    plt.hist(data, np.arange(left_of_first_bin, right_of_last_bin + d, d)) #,normed=True, bins=30
+    plt.xlabel("number of topics")
+    plt.xlabel("number of documents")
+    plt.savefig("./"+graph_dir+"/topic_number.pdf")
 
 # check_results("2016")
 main2()

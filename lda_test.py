@@ -33,9 +33,9 @@ lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
 ntopics = 10
 npasses = 400
-result_dir="doc_results_penza"
-model_dir="model_all_penza"
-year_from=1998
+result_dir="doc_results_all_500_30"
+model_dir="model_all_500_30"
+year_from=1980
 
 # Creating the object for LDA model using gensim library
 Lda = gensim.models.ldamodel.LdaModel
@@ -100,7 +100,7 @@ def main2():
     np.save("./"+result_dir+"/all", np.array(topic_dist)) 
 
     dist_array = np.array(topic_dist)
-    transpose_array = [[] for x in range(20)]
+    transpose_array = [[] for x in range(30)]
     for itr in range(len(dist_array)):
         for top, weight in dist_array[itr]:
             transpose_array[top].append((itr, weight))
