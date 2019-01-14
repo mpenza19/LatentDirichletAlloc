@@ -11,6 +11,7 @@ import gensim
 from gensim import corpora
 from gensim.test.utils import datapath
 import multiprocessing as mp
+import numpy as np
 
 stop = set(stopwords.words('english'))
 stop.add("exist")
@@ -32,7 +33,7 @@ lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
 ntopics = 10
 npasses = 400
-result_dir="results_10"
+result_dir="doc_results_10"
 model_dir="model_10"
 
 
@@ -46,7 +47,7 @@ def clean(doc):
     stop_free = " ".join([i for i in stemmed.split() if i not in stop])
     return stop_free
 
-def train_model(year_dir):
+def test_model(year_dir):
     # Read and clean data
     doc_set = read_bibtex.bibtex_tostring_year(year_dir)
     doc_clean = [clean(doc).split() for doc in doc_set]
@@ -57,26 +58,23 @@ def train_model(year_dir):
     # Converting list of documents (corpus) into Document Term Matrix using dictionary prepared above.
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]
 
-    # Running and Trainign LDA model on the document term matrix.
-    ldamodel = Lda(doc_term_matrix, num_topics=ntopics, id2word = dictionary, passes=npasses, random_state=0)
+    # Loading the LDA model
+    ldamodel = Lda.load("./"+model_dir+"/"+year_dir)
 
-    # Write results
-    with open("./"+result_dir+"/"+year_dir+".txt", 'w') as f:
-        for topic in ldamodel.print_topics(num_topics=ntopics, num_words=10):
-            f.write("#%i: %s\n" % topic)
-        print year_dir
-    ldamodel.save("./"+model_dir+"/"+year_dir)
+    # Infer topic distribution for each doc
+    topic_dist = [ldamodel.get_document_topics(dictionary.doc2bow(doc)) for doc in doc_clean]
+    
+    # Save results
+    np.save("./"+result_dir+"/"+year_dir, np.array(topic_dist))        
+
 
 def main():
     if result_dir in os.listdir("."): shutil.rmtree("./"+result_dir)
     os.mkdir("./"+result_dir)
 
-    if model_dir in os.listdir("."): shutil.rmtree("./"+model_dir)
-    os.mkdir("./"+model_dir)
-
     p = mp.Pool(processes=8)
-    p.map(train_model, read_bibtex.get_years())
+    p.map(test_model, read_bibtex.get_years())
     p.close()
 
-# train_model("2005")
+# test_model("2005")
 main()
