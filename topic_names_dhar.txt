@@ -1,0 +1,6 @@
+0 - congestion control
+1 - Mobile Communication
+2 - queuing theory
+3 - content caching (maybe data analysis)
+4 - wireless networks
+5 - Quality of Service / Video Streaming
