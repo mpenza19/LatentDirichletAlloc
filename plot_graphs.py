@@ -11,8 +11,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 # import seaborn
 
-result_dir="doc_results_10"
-model_dir="model_10"
+result_dir="doc_results_all"
+model_dir="model_all"
 
 
 # Creating the object for LDA model using gensim library
@@ -62,5 +62,26 @@ def main():
     p.map(check_results, read_bibtex.get_years())
     p.close()
 
-check_results("2016")
-# main()
+def main2():
+    # if result_dir in os.listdir("."): shutil.rmtree("./"+result_dir)
+    # os.mkdir("./"+result_dir)
+
+    # Loading the LDA model
+    ldamodel = Lda.load("./"+model_dir+"/all")
+
+    # Infer topic distribution for each doc
+    # topic_dist = [ldamodel.get_document_topics(dictionary.doc2bow(doc)) for doc in doc_clean]
+    
+    # Load results
+    dist_array = np.load("./"+result_dir+"/all.npy")
+
+    data = np.array([float(len(x)) for x in dist_array])
+    d = np.diff(np.unique(data)).min()
+    left_of_first_bin = data.min() - float(d)/2
+    right_of_last_bin = data.max() + float(d)/2
+
+    plt.hist(data, np.arange(left_of_first_bin, right_of_last_bin + d, d)) #,normed=True, bins=30
+    plt.show()
+
+# check_results("2016")
+main2()

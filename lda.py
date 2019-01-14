@@ -34,7 +34,7 @@ ntopics = 20
 npasses = 400
 result_dir="results_all"
 model_dir="model_all"
-year_from=2005
+year_from=1998
 
 
 # Creating the object for LDA model using gensim library
@@ -88,7 +88,6 @@ def main2():
     os.mkdir("./"+model_dir)
 
     doc_set = read_bibtex.bibtex_tostring_from(year_from)
-
     doc_clean = [clean(doc).split() for doc in doc_set]
 
     # Creating the term dictionary of our courpus, where every unique term is assigned an index.
