@@ -19,6 +19,14 @@ def get_bibtex_entries_all():
     
     return bibtex_entries
 
+def get_bibtex_entries_from(year_from):
+    bibtex_entries = list()
+    for year_dir in get_years():
+        if year_from >= int(year_dir):
+            bibtex_entries += get_bibtex_entries_by_year(year_dir)
+    
+    return bibtex_entries
+
 def bibtex_tostring_single(bibtex_entry):
     return ("%s. %s. %s" % (bibtex_entry["title"], '; '.join(bibtex_entry["keywords"].split(';')), bibtex_entry["abstract"])).replace("<<ETX>>", "")
 

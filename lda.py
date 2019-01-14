@@ -30,10 +30,11 @@ exclude.add(";")
 
 lemma = WordNetLemmatizer()
 stemmer = PorterStemmer()
-ntopics = 10
+ntopics = 20
 npasses = 400
-result_dir="results_10"
-model_dir="model_10"
+result_dir="results_all"
+model_dir="model_all"
+year_from=1998
 
 
 # Creating the object for LDA model using gensim library
@@ -78,5 +79,35 @@ def main():
     p.map(train_model, read_bibtex.get_years())
     p.close()
 
+def main2():
+    if result_dir in os.listdir("."): shutil.rmtree("./"+result_dir)
+    os.mkdir("./"+result_dir)
+
+    if model_dir in os.listdir("."): shutil.rmtree("./"+model_dir)
+    os.mkdir("./"+model_dir)
+
+    doc_set = read_bibtex.get_bibtex_entries_from(year_from)
+
+    doc_clean = [clean(doc).split() for doc in doc_set]
+
+    # Creating the term dictionary of our courpus, where every unique term is assigned an index.
+    dictionary = corpora.Dictionary(doc_clean)
+
+    # Converting list of documents (corpus) into Document Term Matrix using dictionary prepared above.
+    doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]
+
+    # Running and Trainign LDA model on the document term matrix.
+    ldamodel = Lda(doc_term_matrix, num_topics=ntopics, id2word = dictionary, passes=npasses, random_state=0)
+
+
+    ldamodel.save("./"+model_dir+"/all")
+
+    # Write results
+    with open("./"+result_dir+"/all_results.txt", 'w') as f:
+        for topic in ldamodel.print_topics(num_topics=ntopics, num_words=10):
+            f.write("#%i: %s\n" % topic)
+
 # train_model("2005")
-main()
+# main()
+
+main2()
