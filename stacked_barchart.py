@@ -24,12 +24,15 @@ ldamodel = Lda.load("./"+model_dir+"/all")
 print "loaded"
 sys.stdin.close()
 
+doc_set_all = read_bibtex.bibtex_tostring_from(1980)
+doc_clean_all = [lda.clean(doc).split() for doc in doc_set_all]
+dictionary = corpora.Dictionary(doc_clean_all)
 
 def get_topic_weights_this_year(yr):
     print yr
     doc_set = read_bibtex.bibtex_tostring_year(str(yr))
     doc_clean = [lda.clean(doc).split() for doc in doc_set]
-    dictionary = corpora.Dictionary(doc_clean)
+#     dictionary = corpora.Dictionary(doc_clean)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]
 
     topic_dist = [ldamodel.get_document_topics(dictionary.doc2bow(doc)) for doc in doc_clean]
@@ -98,7 +101,7 @@ def make_data():
         topic_names = [line.strip() for line in f.readlines()]
     print "matrix formed"
     
-    data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = topic_names[topic]) for topic in range(ldamodel.num_topics)]
+    data = [go.Bar(x = weight_matrix[topic].keys(), y = weight_matrix[topic].values(), name = topic_names[topic]) for topic in range(ldamodel.num_topics)]
     return data
 
 def make_layout(mylegend=dict()):
