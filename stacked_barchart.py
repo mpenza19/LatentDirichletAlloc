@@ -6,20 +6,24 @@ from gensim import corpora
 import read_bibtex, lda
 
 import numpy as np
+import sys
 
-init_notebook_mode(connected=True)
+#init_notebook_mode(connected=True)
 
 run_code = "_500_30"
 result_dir="doc_results_all"+run_code
 model_dir="model_all"+run_code
 graph_dir="graph"+run_code
 top_dir="top"+run_code
+topic_names_filename="topic_names_graphs"+run_code+".txt"
 year = 1991
 all_years = read_bibtex.get_years()
 
 Lda = gensim.models.ldamodel.LdaModel
 ldamodel = Lda.load("./"+model_dir+"/all")
 print "loaded"
+sys.stdin.close()
+
 
 def get_topic_weights_this_year(yr):
     print yr
@@ -86,22 +90,29 @@ def get_weights_by_topic_by_year(weights_by_year):
 
     return weights_by_topic_by_year
 
-def main():
+
+def make_data():
     weights_by_year = get_topic_weights_by_year()
     weight_matrix = get_weights_by_topic_by_year(weights_by_year)
-    with open("topic_names_graphs.txt", "r") as f:
+    with open(topic_names_filename) as f:
         topic_names = [line.strip() for line in f.readlines()]
-
     print "matrix formed"
     
     data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = topic_names[topic]) for topic in range(ldamodel.num_topics)]
+    return data
+
+def make_layout(mylegend=dict()):
     layout = go.Layout(
         barmode='stack',
         title = "Normalized topic weights by year",
         xaxis = dict(title="Year", nticks=len(all_years)+1),
-        yaxis = dict(title="Normalized topic weight")
-        ) #, legend=dict(orientation="h"))
+        yaxis = dict(title="Normalized topic weight"),
+        legend = dict(font=dict(size=13)),
+    )
+    return layout
+
+def main():
+    data = make_data()
+    layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename='topic_weights_by_year', image='svg')
-
-main()
