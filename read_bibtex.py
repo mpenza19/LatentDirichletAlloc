@@ -48,3 +48,5 @@ def main():
     else:
         for line in bibtex_tostring_all():
             print line, '\n'
+
+print len(get_bibtex_entries_all())
