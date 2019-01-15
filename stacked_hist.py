@@ -87,13 +87,20 @@ def get_weights_by_topic_by_year(weights_by_year):
     return weights_by_topic_by_year
 
 def main():
-
     weights_by_year = get_topic_weights_by_year()
     weight_matrix = get_weights_by_topic_by_year(weights_by_year)
-    print "matrix formed"
+    with open("topic_names_graphs.txt", "r") as f:
+        topic_names = [line.strip() for line in f.readlines()]
 
-    data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = ("Topic %s" % topic)) for topic in range(ldamodel.num_topics)]
-    layout = go.Layout(barmode='stack', legend=dict(orientation="h"))
+    print "matrix formed"
+    
+    data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = topic_names[topic]) for topic in range(ldamodel.num_topics)]
+    layout = go.Layout(
+        barmode='stack',
+        title = "Normalized topic weights by year",
+        xaxis = dict(title="Year", nticks=len(all_years)+1),
+        yaxis = dict(title="Normalized topic weight")
+        ) #, legend=dict(orientation="h"))
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename='topic_weights_by_year', image='svg')
 
