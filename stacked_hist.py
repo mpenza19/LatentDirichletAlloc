@@ -19,11 +19,7 @@ all_years = read_bibtex.get_years()
 
 Lda = gensim.models.ldamodel.LdaModel
 ldamodel = Lda.load("./"+model_dir+"/all")
-
-
-
 print "loaded"
-
 
 def get_topic_weights_this_year(yr):
     print yr
@@ -65,8 +61,6 @@ def get_weights_this_topic_by_year(topic, weights_by_year):
     if topic < 0 or topic >= ldamodel.num_topics:
         sys.stderr.write("ERROR: invalid topic number.\n")
         exit()
-
-    
     
     weight_this_topic_by_year = dict([(year, topic_weights[topic]) for year, topic_weights in weights_by_year.iteritems()])
     
