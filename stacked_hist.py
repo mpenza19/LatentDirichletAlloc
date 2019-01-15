@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import gensim
 from gensim import corpora
-import read_bibtex, lda, compatibility
+import read_bibtex, lda
 
 import numpy as np
 
@@ -92,16 +92,15 @@ def get_weights_by_topic_by_year(weights_by_year):
 
     return weights_by_topic_by_year
 
+def main():
 
-        
+    weights_by_year = get_topic_weights_by_year()
+    weight_matrix = get_weights_by_topic_by_year(weights_by_year)
+    print "matrix formed"
 
+    data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = ("Topic %s" % topic)) for topic in range(ldamodel.num_topics)]
+    layout = go.Layout(barmode='stack', legend=dict(orientation="h"))
+    fig = go.Figure(data=data, layout=layout)
+    plot(fig, filename='topic_weights_by_year', image='svg')
 
-
-weights_by_year = get_topic_weights_by_year()
-weight_matrix = get_weights_by_topic_by_year(weights_by_year)
-print "matrix formed"
-
-data = [go.Bar(x = all_years, y = weight_matrix[topic].values(), name = ("Topic %s" % topic)) for topic in range(ldamodel.num_topics)]
-layout = go.Layout(barmode='stack')
-fig = go.Figure(data=data, layout=layout)
-plot(fig, filename='stacked-bar', image='jpeg')
+main()
