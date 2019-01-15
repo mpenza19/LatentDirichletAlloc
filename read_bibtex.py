@@ -49,4 +49,4 @@ def main():
         for line in bibtex_tostring_all():
             print line, '\n'
 
-print len(get_bibtex_entries_all())
+#print len(get_bibtex_entries_all())
