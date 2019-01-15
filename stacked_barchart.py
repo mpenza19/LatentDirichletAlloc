@@ -21,12 +21,13 @@ all_years = read_bibtex.get_years()
 
 Lda = gensim.models.ldamodel.LdaModel
 ldamodel = Lda.load("./"+model_dir+"/all")
-print "loaded"
+print "model loaded"
 sys.stdin.close()
 
-doc_set_all = read_bibtex.bibtex_tostring_from(1980)
+doc_set_all = read_bibtex.bibtex_tostring_all()
 doc_clean_all = [lda.clean(doc).split() for doc in doc_set_all]
 dictionary = corpora.Dictionary(doc_clean_all)
+print "dictionary formed"
 
 def get_topic_weights_this_year(yr):
     print yr
@@ -119,3 +120,5 @@ def main():
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     plot(fig, filename='topic_weights_by_year', image='svg')
+
+main()
