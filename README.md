@@ -14,7 +14,6 @@ bibtexreader
 
 They need to be stored in a folder named abstracts which contains a directory for each year of the conference.
 Within a year directory a txt file containing the abstract and title data is kept in the form of Bibtex citations.
-(We are working on publishing the data we used)
 
 To train the model run the following command:
 ```
